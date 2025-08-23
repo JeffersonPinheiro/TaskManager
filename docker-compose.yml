@@ -1,0 +1,93 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: taskmanager-frontend
+    ports:
+      - "4201:4200"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - api
+    networks:
+      - taskmanager-network
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskmanager-api
+    ports:
+      - "5001:8080"
+      - "5134:5134"
+      - "61137:61137"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - DOTNET_USE_POLLING_FILE_WATCHER=true
+      - DOTNET_WATCH_RESTART_ON_RUDE_EDIT=true
+      - ConnectionStrings__Default=Server=db;Database=GerenciamentoTarefas;User Id=sa;Password=Your_password123;TrustServerCertificate=true;
+      - Jwt__Issuer=GerenciamentoDeTarefas
+      - Jwt__Audience=GerenciamentoDeTarefasAudience
+      - Jwt__SecretKey=MySuperSecureAndRandomKeyThatLooksJustAwesomeAndNeedsToBeVeryVeryLong!!!111oneeleven
+    volumes:
+      # Mount source code for hot reload
+      - ./backend:/app
+      - /app/bin
+      - /app/obj
+    depends_on:
+      apply-migration:
+        condition: service_completed_successfully
+    networks:
+      - taskmanager-network
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+
+  apply-migration:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: taskmanager-apply-migration
+    command: ["dotnet", "ef", "database", "update"]
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - taskmanager-network
+    restart: "no"
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: taskmanager-db
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+    ports:
+      - "1433:1433"
+    volumes:
+      - db_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P Your_password123 -C -Q 'SELECT 1' || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
+    networks:
+      - taskmanager-network
+    restart: unless-stopped
+
+networks:
+  taskmanager-network:
+    driver: bridge
+
+volumes:
+  db_data:
