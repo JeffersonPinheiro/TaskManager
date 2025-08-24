@@ -90,9 +90,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
               this.dashboardData.completedCount
             ],
             backgroundColor: [
-              '#f59e0b', // yellow for pending
-              '#3b82f6', // blue for in progress
-              '#10b981'  // green for completed
+              '#f59e0b',
+              '#3b82f6',
+              '#10b981' 
             ],
             borderWidth: 2,
             borderColor: '#ffffff'
@@ -114,7 +114,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   updateChartData(): void {
-    // This method is now handled by createChart
     this.createChart();
   }
 

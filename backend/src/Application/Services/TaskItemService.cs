@@ -59,15 +59,12 @@ namespace GerenciamentoDeTarefas.src.Application.Services
                 var task = await _taskRepo.GetByIdAsync(taskId)
                     ?? throw new CannotUnloadAppDomainException("Tarefa não encontrada.");
 
-                // Only update title if provided
                 if (!string.IsNullOrWhiteSpace(req.Title))
                     task.Title = req.Title;
 
-                // Only update description if provided
                 if (!string.IsNullOrWhiteSpace(req.Description))
                     task.Description = req.Description;
 
-                // Only update responsible if provided
                 if (req.ResponsibleId.HasValue)
                 {
                     var user = await _userRepo.GetByIdAsync(req.ResponsibleId.Value)
@@ -75,13 +72,11 @@ namespace GerenciamentoDeTarefas.src.Application.Services
                     task.ResponsibleId = user.Id;
                 }
 
-                // Only update status if provided
                 if (!string.IsNullOrWhiteSpace(req.Status))
                     task.Status = Enum.Parse<TaskStatus>(req.Status);
 
                 await _taskRepo.UpdateAsync(task);
 
-                // Get the updated user info for response
                 var responsibleUser = await _userRepo.GetByIdAsync(task.ResponsibleId);
 
                 return new TaskDto

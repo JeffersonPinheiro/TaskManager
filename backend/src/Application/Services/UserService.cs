@@ -17,7 +17,6 @@ namespace GerenciamentoDeTarefas.src.Application.Services
 
         public async Task<UserDto> CreateUserAsync(CreateUserRequest request)
         {
-            // Validações  
             if (await _userRepo.ExistsByEmailAsync(request.Email))
                 throw new CannotUnloadAppDomainException("E-mail já cadastrado.");
 
@@ -46,7 +45,6 @@ namespace GerenciamentoDeTarefas.src.Application.Services
             if (user == null)
                 throw new Exception("Usuário não encontrado.");
 
-            // Only update email if provided and different from current
             if (!string.IsNullOrWhiteSpace(request.Email) && request.Email != user.Email)
             {
                 if (await _userRepo.ExistsByEmailAsync(request.Email))
@@ -54,15 +52,12 @@ namespace GerenciamentoDeTarefas.src.Application.Services
                 user.Email = request.Email;
             }
 
-            // Only update name if provided
             if (!string.IsNullOrWhiteSpace(request.Name))
                 user.Name = request.Name;
 
-            // Only update password if provided
             if (!string.IsNullOrWhiteSpace(request.Password))
                 user.PasswordHash = _passwordHasher.Hash(request.Password);
 
-            // Only update role if provided
             if (!string.IsNullOrWhiteSpace(request.Role))
                 user.Role = Enum.Parse<UserRole>(request.Role);
 

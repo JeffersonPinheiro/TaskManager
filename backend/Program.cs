@@ -15,7 +15,6 @@ using static GerenciamentoDeTarefas.src.Application.Services.TaskItemService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
 builder.Services.AddControllers();
 
@@ -87,7 +86,7 @@ builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-// UseCases de Usu�rios
+// UseCases de Usuarios
 builder.Services.AddScoped<CreateUserUseCase>();
 builder.Services.AddScoped<EditUserUseCase>();
 builder.Services.AddScoped<ListUsersUseCase>();
@@ -105,7 +104,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            // Configure suas valida��es aqui
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
@@ -141,7 +139,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -150,7 +147,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
-// Enable CORS
 app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();

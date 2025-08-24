@@ -13,7 +13,6 @@ namespace GerenciamentoDeTarefas.src.Application.UseCases.Users
 
         public async Task<UserDto> ExecuteAsync(CreateUserRequest request)
         {
-            // Validações de caso de uso (se necessário)
             return await _userService.CreateUserAsync(request);
         }
     }

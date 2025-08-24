@@ -224,7 +224,7 @@
 
         <div *ngIf="!isAdmin && users.length > 0">
           <label class="block text-sm font-medium text-gray-700 mb-1">Responsável</label>
-          <input type="text" [value]="users[0]?.name || 'Você'" readonly
+          <input type="text" [value]="users[0].name || 'Você'" readonly
             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-500 sm:text-sm cursor-not-allowed" />
           <p class="mt-1 text-xs text-gray-500">Você será automaticamente atribuído como responsável por esta tarefa.
           </p>

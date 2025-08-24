@@ -11,7 +11,7 @@ namespace GerenciamentoDeTarefas.src.Infra.Data
             // Check if database already has data
             if (context.Users.Any())
             {
-                return; // Database has been seeded
+                return;
             }
 
             // Create admin user
@@ -136,10 +136,8 @@ namespace GerenciamentoDeTarefas.src.Infra.Data
                 }
             };
 
-            // Add tasks to context
             context.Tasks.AddRange(tasks);
 
-            // Save changes
             await context.SaveChangesAsync();
         }
     }
