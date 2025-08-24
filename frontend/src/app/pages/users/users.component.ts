@@ -11,7 +11,6 @@ import { User, CreateUserRequest, EditUserRequest } from '../../models/user.mode
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.css']
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
@@ -139,27 +138,6 @@ export class UsersComponent implements OnInit {
         alert('Erro ao atualizar usuário.');
       }
     });
-  }
-
-  navigateToDashboard(): void {
-    this.router.navigate(['/dashboard']);
-  }
-
-  navigateToTasks(): void {
-    this.router.navigate(['/tasks']);
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  get currentUser() {
-    return this.authService.getCurrentUser();
-  }
-
-  get isAdmin() {
-    return this.authService.isAdmin();
   }
 
   get name() { return this.userForm.get('name'); }

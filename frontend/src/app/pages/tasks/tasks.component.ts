@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +12,6 @@ import { User } from '../../models/user.model';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.css']
 })
 export class TasksComponent implements OnInit {
   tasks: Task[] = [];
@@ -40,7 +38,6 @@ export class TasksComponent implements OnInit {
     private taskService: TaskService,
     private userService: UserService,
     private authService: AuthService,
-    private router: Router
   ) {
     this.taskForm = this.fb.group({
       title: ['', [Validators.required, Validators.maxLength(100)]],
@@ -261,23 +258,6 @@ export class TasksComponent implements OnInit {
         }
       });
     }
-  }
-
-  navigateToDashboard(): void {
-    this.router.navigate(['/dashboard']);
-  }
-
-  navigateToUsers(): void {
-    this.router.navigate(['/users']);
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  get currentUser() {
-    return this.authService.getCurrentUser();
   }
 
   get isAdmin() {

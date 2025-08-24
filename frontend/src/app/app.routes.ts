@@ -1,28 +1,42 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { TasksComponent } from './components/tasks/tasks.component';
-import { UsersComponent } from './components/users/users.component';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
+import { LayoutAuthenticatedComponent } from './components/layout-authenticated/layout-authenticated.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'login', component: LoginComponent },
-  { 
-    path: 'dashboard', 
-    component: DashboardComponent, 
-    canActivate: [authGuard] 
+  { path: 'login', loadComponent:() => import('./pages/login/login.component').then(m => m.LoginComponent) },
+  {
+    path: '',
+    component: LayoutAuthenticatedComponent,
+    canActivate: [authGuard],
+    children: [{ 
+        path: 'dashboard', 
+        loadComponent:() => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+      },
+      { 
+        path: 'tasks', 
+        loadComponent:() => import('./pages/tasks/tasks.component').then(m => m.TasksComponent), 
+      },
+      { 
+        path: 'users', 
+        loadComponent:() => import('./pages/users/users.component').then(m => m.UsersComponent), 
+        canActivate: [adminGuard] 
+    }]
   },
-  { 
-    path: 'tasks', 
-    component: TasksComponent, 
-    canActivate: [authGuard] 
-  },
-  { 
-    path: 'users', 
-    component: UsersComponent, 
-    canActivate: [authGuard, adminGuard] 
-  },
-  { path: '**', redirectTo: '/login' }
+  // { 
+  //   path: 'dashboard', 
+  //   loadComponent:() => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+  //   canActivate: [authGuard] 
+  // },
+  // { 
+  //   path: 'tasks', 
+  //   loadComponent:() => import('./pages/tasks/tasks.component').then(m => m.TasksComponent), 
+  //   canActivate: [authGuard] 
+  // },
+  // { 
+  //   path: 'users', 
+  //   loadComponent:() => import('./pages/users/users.component').then(m => m.UsersComponent), 
+  //   canActivate: [authGuard, adminGuard] 
+  // },
+  { path: '**', redirectTo: '/dashboard' }
 ];

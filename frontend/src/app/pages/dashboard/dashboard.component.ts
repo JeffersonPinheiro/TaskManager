@@ -4,8 +4,6 @@ import { Chart, ChartConfiguration, ChartData, ChartType, registerables } from '
 import { DashboardService } from '../../services/dashboard.service';
 import { Dashboard } from '../../models/dashboard.model';
 import { Task, TaskStatus, TaskStatusLabels } from '../../models/task.model';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
 
 Chart.register(...registerables);
 
@@ -14,7 +12,6 @@ Chart.register(...registerables);
   standalone: true,
   imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   dashboardData: Dashboard | null = null;
@@ -26,8 +23,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private dashboardService: DashboardService,
-    private authService: AuthService,
-    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -47,11 +42,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   loadDashboardData(): void {
     this.isLoading = true;
     this.error = null;
-    console.log('Loading dashboard data...');
     
     this.dashboardService.getDashboardData().subscribe({
       next: (data) => {
-        console.log('Dashboard data loaded:', data);
         this.dashboardData = data;
         this.isLoading = false;
         this.dataLoaded = true;
@@ -69,14 +62,14 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   createChart(): void {
+    // Chart creation skipped - no data or not loaded yet
     if (!this.dashboardData || !this.dataLoaded) {
-      console.log('Chart creation skipped - no data or not loaded yet');
       return;
     }
 
     const canvas = document.getElementById('tasksChart') as HTMLCanvasElement;
     if (!canvas) {
-      console.log('Chart canvas not found');
+      console.error('Chart canvas not found');
       return;
     }
 
@@ -115,7 +108,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
       });
-      console.log('Chart created successfully');
     } catch (error) {
       console.error('Error creating chart:', error);
     }
@@ -124,27 +116,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   updateChartData(): void {
     // This method is now handled by createChart
     this.createChart();
-  }
-
-  navigateToTasks(): void {
-    this.router.navigate(['/tasks']);
-  }
-
-  navigateToUsers(): void {
-    this.router.navigate(['/users']);
-  }
-
-  logout(): void {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  get currentUser() {
-    return this.authService.getCurrentUser();
-  }
-
-  get isAdmin() {
-    return this.authService.isAdmin();
   }
 
   getStatusLabel(status: TaskStatus): string {

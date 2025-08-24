@@ -1,0 +1,33 @@
+<div class="min-h-screen bg-gray-50">
+  <nav class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center">
+          <h1 class="text-xl font-semibold">Sistema de Tarefas</h1>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-gray-700">Olá, {{ currentUser?.name }}</span>
+          <button (click)="navigateToDashboard()"
+            class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            Dashboard
+          </button>
+          <button (click)="navigateToTasks()"
+            class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            Tarefas
+          </button>
+          <button *ngIf="isAdmin" (click)="navigateToUsers()"
+            class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+            Usuários
+          </button>
+          <button (click)="logout()"
+            class="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm font-medium">
+            Sair
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <router-outlet />
+  </main>
+</div>
